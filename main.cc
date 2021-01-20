@@ -35,18 +35,18 @@ int TRANS(unsigned char val)
 
 void st2float(std::string target, float * ptr, int size)
 {
-    unsigned char f2uc[4] = {0};
+    unsigned char s2uc[4] = {0};
 
     for (auto i = 0; i < size; i++)
     {
         int a = TRANS( ((unsigned char*)target.c_str())[2 * i + 0] );
         int b = TRANS( ((unsigned char*)target.c_str())[2 * i + 1] );
-        f2uc[i] = 0;
-        f2uc[i] = f2uc[i] + a << 4;
-        f2uc[i] = f2uc[i] | b;
+        s2uc[i] = 0;
+        s2uc[i] = s2uc[i] + a << 4;
+        s2uc[i] = s2uc[i] | b;
     }
 
-    uc2float(f2uc, ptr, sizeof(f2uc));
+    uc2float(s2uc, ptr, sizeof(s2uc));
 }
 
 int main()
