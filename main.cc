@@ -6,19 +6,19 @@
 #include <sstream>
 #include <iomanip>
 
-void float2uc(float * target, unsigned char * ptr, int size)
+void float2uchar(float *target, unsigned char *ptr, int size)
 {
     assert(size == 4); //Currently, only supports one value.
     memcpy(ptr, target, size);
 }
 
-void uc2float(unsigned char * target, float * ptr, int size)
+void uchar2float(unsigned char *target, float *ptr, int size)
 {
     assert(size == 4);
     memcpy(ptr, target, size);
 }
 
-void uc2string(unsigned char * target, std::string * ptr, int size)
+void uchar2string(unsigned char *target, std::string *ptr, int size)
 {
     assert(size == 4);
     std::stringstream ss;
@@ -29,58 +29,61 @@ void uc2string(unsigned char * target, std::string * ptr, int size)
 
 int TRANS(unsigned char val)
 {
-   if      (val >= 'a' && val <= 'f')
-      return val - 87;
-   else if (val >= 'A' && val <= 'F')
-      return val - 55;
-   else if (val >= '0' && val <= '9')
-      return val - 48;
-   else
-      assert(0); 
+    if (val >= 'a' && val <= 'f')
+        return val - 87;
+    else if (val >= 'A' && val <= 'F')
+        return val - 55;
+    else if (val >= '0' && val <= '9')
+        return val - 48;
+    else
+        assert(0);
 }
 
-void st2float(std::string target, float * ptr, int size)
+void string2float(std::string target, float *ptr, int size)
 {
     assert(size == 4);
     unsigned char s2uc[4] = {0};
 
     for (auto i = 0; i < size; i++)
     {
-        int a = TRANS( ((unsigned char*)target.c_str())[2 * i + 0] );
-        int b = TRANS( ((unsigned char*)target.c_str())[2 * i + 1] );
+        int a = TRANS(((unsigned char *)target.c_str())[2 * i + 0]);
+        int b = TRANS(((unsigned char *)target.c_str())[2 * i + 1]);
         s2uc[i] = 0;
         s2uc[i] = s2uc[i] + a << 4;
         s2uc[i] = s2uc[i] | b;
     }
 
-    uc2float(s2uc, ptr, sizeof(s2uc));
+    uchar2float(s2uc, ptr, sizeof(s2uc));
 }
 
 int main()
 {
-   unsigned char f2uc[4] = {0};
-   float uc2f = 3.14159265358979323846;
+    unsigned char uchar[4] = {0};
+    float f = 3.14159265358979323846;
 
-   printf("Before uc2f : %0.16f \n", uc2f);
-   float2uc(&uc2f, f2uc, sizeof(float));
+    printf("Before uc2f : %0.16f \n", f);
 
-   for (auto i = 0; i < sizeof(float); i++)
-       printf("0x%02x ", f2uc[i]);
-   printf("\n");
+    // float to unsigned char
+    float2uchar(&f, uchar, sizeof(float));
 
-   uc2f = 0.f;
-   uc2float(f2uc, &uc2f, sizeof(float));
+    for (auto i = 0; i < sizeof(float); i++)
+        printf("0x%02x ", uchar[i]);
+    printf("\n");
 
-   printf("After uc2f : %0.16f \n", uc2f);
+    f = 0.f;
 
-   std::string s_test;
-   float f_test;
+    uchar2float(uchar, &f, sizeof(float));
 
-   uc2string(f2uc, &s_test, sizeof(f2uc));
-   printf("s_test : %s \n", s_test.c_str());
+    printf("After uc2f : %0.16f \n", f);
 
-   st2float("db0f4940", &f_test, sizeof(f2uc));
-   printf("f_test : %0.16f \n", f_test);
+    std::string s_test;
+    float f_test;
 
-   return 0;
+    uchar2string(uchar, &s_test, sizeof(float));
+    printf("s_test : %s \n", s_test.c_str());
+
+    string2float("db0f4940", &f_test, sizeof(float));
+    printf("f_test : %0.16f \n", f_test);
+
+    return 0;
 }
