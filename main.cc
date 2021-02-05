@@ -1,22 +1,26 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <string>
 #include <sstream>
 #include <iomanip>
 
 void float2uc(float * target, unsigned char * ptr, int size)
 {
+    assert(size == 4); //Currently, only supports one value.
     memcpy(ptr, target, size);
 }
 
 void uc2float(unsigned char * target, float * ptr, int size)
 {
+    assert(size == 4);
     memcpy(ptr, target, size);
 }
 
 void uc2string(unsigned char * target, std::string * ptr, int size)
 {
+    assert(size == 4);
     std::stringstream ss;
     for (auto i = 0; i < size; i++)
         ss << std::setw(2) << std::setfill('0') << std::hex << (0xFF & target[i]);
@@ -31,10 +35,13 @@ int TRANS(unsigned char val)
       return val - 55;
    else if (val >= '0')
       return val - 48;
+   else
+      assert(0); 
 }
 
 void st2float(std::string target, float * ptr, int size)
 {
+    assert(size == 4);
     unsigned char s2uc[4] = {0};
 
     for (auto i = 0; i < size; i++)
