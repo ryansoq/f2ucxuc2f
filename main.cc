@@ -29,11 +29,11 @@ void uc2string(unsigned char * target, std::string * ptr, int size)
 
 int TRANS(unsigned char val)
 {
-   if (val >= 'a')
+   if      (val >= 'a' && val <= 'f')
       return val - 87;
-   else if (val >= 'A')
+   else if (val >= 'A' && val <= 'F')
       return val - 55;
-   else if (val >= '0')
+   else if (val >= '0' && val <= '9')
       return val - 48;
    else
       assert(0); 
